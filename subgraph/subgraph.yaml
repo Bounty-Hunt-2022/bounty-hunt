@@ -1,0 +1,51 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: BountyMaker
+    network: mumbai
+    source:
+      address: "0x0418dFcE00faDE89CAbD7B5C970642f026888E48"
+      abi: BountyMaker
+      startBlock: 25576016
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - BountyCreated
+        - Claim
+        - ERC20PaymentReleased
+        - OwnershipTransferred
+        - Transfer
+        - BountyMaker
+        - Bounty
+        - Winner
+        - Hunter
+      abis:
+        - name: BountyMaker
+          file: ./abis/BountyMaker.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BountyCreated(string,uint256[])
+          handler: handleBountyCreated
+        - event: Claim(indexed address,string,uint128,uint256,bool)
+          handler: handleClaim
+        - event: ERC20PaymentReleased(indexed address,address,uint256)
+          handler: handleERC20PaymentReleased
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: WinnersDeclared(string,address[])
+          handler: handleWinnersDeclared
+      # callHandlers:
+      #   - function: setBountyWinners(string,address[])
+      #     handler: handleBountyWinners
+      file: ./src/mapping.ts
