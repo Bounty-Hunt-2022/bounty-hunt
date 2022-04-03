@@ -33,6 +33,7 @@ async function main() {
   console.log("BountyMaker address: ", bountymaker.address);
   // USDC address:  0xf940746486Da186aE584f60cF87bA1dd2880A2db
   // BountyMaker address:  0xE044a02CadCC21985a51A4e847fA3C9C4dBDdEf5
+  // BountyMaker address:  0x5Fb646c7FEAb613d1C81ce376ba0f17556c05C54 test-with-open-to-public
 
   //   const bountyId = "VVS";
   //   const uri = "ipfs://Qma9fyUqLUm3SmAdxBBS6g3qxu6xNWdrkZcuUGPNAnjv9E/";

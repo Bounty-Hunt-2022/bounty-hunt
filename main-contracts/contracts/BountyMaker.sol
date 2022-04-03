@@ -16,7 +16,7 @@ contract BountyMaker is ERC721URIStorage, Ownable {
     mapping(string => Bounty) public bountys;
     mapping(string => uint[]) public rewards;
     IERC20 public token;
-
+    bool public open;
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdTracker;
@@ -44,15 +44,19 @@ contract BountyMaker is ERC721URIStorage, Ownable {
     );
     event ERC20PaymentReleased(IERC20 indexed token, address to, uint256 amount);
 
-
+function openToPublic(bool _isOpen) public onlyOwner{
+  open=_isOpen;
+}
     constructor(IERC20 _token)
         ERC721("bountyMaker", "BOUNTYMAKER")
     {
         admins[msg.sender] = true;
         token=_token;
+        open=false;
         _tokenIdTracker.increment();
     }
         modifier onlyAdmin() {
+        if(!open)
         require(admins[msg.sender] == true);
         _;
     }
@@ -60,22 +64,22 @@ contract BountyMaker is ERC721URIStorage, Ownable {
     modifier eligibiltyCheck(string memory _bountyId, address to) {
         require(
             !bountys[_bountyId].active,
-            "BountyMaker: bounty is not finished yet"
+            ""
         );
         require(
             winners[to][_bountyId] > 0,
-            "BountyMaker: address has not won"
+            ""
         );
         require(
             claimed[to][_bountyId] == 0,
-            "BountyMaker: address has already claimed token"
+            ""
         );
         _;
     }
     modifier rewardEligibiltyCheck(string memory _bountyId, address to) {
         require(
              winners[to][_bountyId]<=rewards[_bountyId].length ,
-            "BountyMaker: address is not eligible for reward"
+            " address is not eligible for reward"
         );
         _;
     }
@@ -95,10 +99,10 @@ contract BountyMaker is ERC721URIStorage, Ownable {
         require(_endTime > block.timestamp, "Invalid Value for timestamp");
         require(
             bountys[_bountyId].tokenLimit == 0,
-            "BountyMaker: Bounty already exists"
+            ""
         );
-        require(_tokenLimit > 0, "BountyMaker: Limit must be greater than 0");
-        require(_tokenLimit >= _rewards.length, "BountyMaker: Limit must be more than no of rewards");
+        require(_tokenLimit > 0, "Limit > 0");
+        require(_tokenLimit >= _rewards.length, " Limit must be more than no of rewards");
         uint totalReward=0;
         for(uint i=0;i<_rewards.length;i++){
             totalReward+=_rewards[i];
@@ -115,9 +119,9 @@ contract BountyMaker is ERC721URIStorage, Ownable {
 
     function setBountyWinners(string memory _bountyId, address[] memory _winners) external onlyAdmin {
         require(bountys[_bountyId].active ,
-            "BountyMaker: Bounty is not active");
+            " Bounty is not active");
         require(bountys[_bountyId].tokenLimit==_winners.length ,
-            "BountyMaker: No of winners must be equal to tokenLimts");
+            " No of winners must be equal to tokenLimts");
         for(uint128 i=0;i<_winners.length;i++){
             winners[_winners[i]][_bountyId] = i+1;
         }    
