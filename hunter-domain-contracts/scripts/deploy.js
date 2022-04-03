@@ -13,9 +13,9 @@ const main = async () => {
     { value: hre.ethers.utils.parseEther("0.1") }
   );
   await txn.wait();
-  console.log("Minted domain ozzy.hunter");
+  console.log("Minted domain ozzzzy.hunter");
 
-  const address = await domainContract.getAddress("silent");
+  const address = await domainContract.getAddress("ozzzzy");
   console.log("Owner of domain silent:", address);
 
   const balance = await hre.ethers.provider.getBalance(domainContract.address);
